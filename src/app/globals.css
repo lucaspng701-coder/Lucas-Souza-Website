@@ -394,8 +394,8 @@ button {
 
 .projects-title-indent {
   padding-left: 17vw;
-  color: transparent;
-  -webkit-text-stroke: 1px rgba(242, 240, 234, 0.8);
+  color: var(--paper);
+  -webkit-text-stroke: 0;
 }
 
 .filter-bar {
@@ -656,7 +656,7 @@ button {
   font-weight: 720;
   line-height: 0.72;
   letter-spacing: -0.09em;
-  text-transform: uppercase;
+  text-transform: none;
 }
 
 .contact-copy h2 em {
@@ -1062,6 +1062,7 @@ button {
   .client-logo-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .clients-section { padding-block: 0.75rem; }
   .client-logo-slot { min-height: 4.5rem; }
+  .client-logo-image { transform: scale(0.8); }
   .bio-section { padding-top: 3.7rem; padding-bottom: 7rem; }
   .bio-reveal-copy { margin-top: 5rem; font-size: clamp(2rem, 9.5vw, 3.4rem); }
   .projects-section { padding-top: 3.7rem; }

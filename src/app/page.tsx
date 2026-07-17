@@ -15,11 +15,9 @@ const ABOUT_COPY =
   "Finding new ways to make cool things. From brand campaigns to product videos and broadcast graphics, I love giving ideas a life of their own.";
 
 const ABOUT_EMPHASIS = new Set([
-  0, 1, 2,
+  0,
   5, 6,
-  11, 12,
-  14, 15,
-  19, 20, 21, 22, 23, 24,
+  19, 20, 21,
 ]);
 
 const clientLogos = [
@@ -252,7 +250,7 @@ export default function Home() {
       <section className="contact-section section-pad" id="contact">
         <div className="contact-copy">
           <p>Have a project in mind?</p>
-          <h2>Let&apos;s<br /><em>talk.</em></h2>
+          <h2>Let&apos;s<br /><em>Talk.</em></h2>
         </div>
 
         <div className="contact-links">
