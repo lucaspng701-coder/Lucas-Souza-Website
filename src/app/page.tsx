@@ -317,7 +317,8 @@ export default function Home() {
           <span className="hero-line"><span className="hero-line-text">I help brands</span></span>
           <span className="hero-line hero-line-indent"><span className="hero-line-text">bring ideas</span></span>
           <span className="hero-line"><span className="hero-line-text">to life with</span></span>
-          <span className="hero-line hero-line-last"><span className="hero-line-text">design &amp; motion<span className="acid-dot">.</span></span></span>
+          <span className="hero-line"><span className="hero-line-text">design and</span></span>
+          <span className="hero-line hero-line-last"><span className="hero-line-text">motion<span className="acid-dot">.</span></span></span>
         </h1>
 
         <div className="hero-bottom hero-meta">
