@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { FooterSocialLinks } from "../components/FooterSocialLinks";
+import { PageTitleReveal } from "../components/PageTitleReveal";
 
 export const metadata: Metadata = {
   title: "Contact — Lucas Souza",
@@ -16,7 +18,7 @@ export default function ContactPage() {
 
         <div className="contact-page-copy">
           <p>Got an idea worth moving?</p>
-          <h1>Say<br /><em>hello.</em></h1>
+          <PageTitleReveal firstLine="Say" secondLine="Hello." />
         </div>
 
         <div className="contact-page-links">
@@ -32,6 +34,10 @@ export default function ContactPage() {
           </a>
         </div>
       </section>
+
+      <footer className="inner-social-footer section-pad">
+        <FooterSocialLinks dark />
+      </footer>
     </main>
   );
 }

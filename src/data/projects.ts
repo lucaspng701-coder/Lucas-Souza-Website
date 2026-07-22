@@ -1,16 +1,23 @@
 export type ProjectCategory = "3D Motion" | "2D Motion" | "Interactive";
 export type ProjectFilter = "All" | ProjectCategory;
 
+export type ProjectCoverVideo = {
+  webm: string;
+  mp4: string;
+};
+
 export type Project = {
   id: string;
   title: string;
   category: ProjectCategory;
+  categories?: ProjectCategory[];
   discipline: string;
   year?: string;
   visual: string;
   summary: string;
   services: string[];
   vimeoId?: string;
+  coverVideo?: ProjectCoverVideo;
 };
 
 export const filters: ProjectFilter[] = [
@@ -30,6 +37,65 @@ export const projects: Project[] = [
     summary: "A 3D product film created for Noro Watch.",
     services: ["3D motion", "Art direction", "Product visualization"],
     vimeoId: "1093804333",
+    coverVideo: {
+      webm: "/videos/covers/noro-watch.webm",
+      mp4: "/videos/covers/noro-watch.mp4",
+    },
+  },
+  {
+    id: "myotaku-ui-micro-interactions",
+    title: "Myotaku — UI Micro Interactions",
+    category: "Interactive",
+    discipline: "Interactive · UI Motion",
+    visual: "interface",
+    summary: "A collection of playful UI micro interactions created for Myotaku.",
+    services: ["UI motion", "Interaction design", "Motion design"],
+    coverVideo: {
+      webm: "/videos/covers/myotaku-ui-micro-interactions.webm",
+      mp4: "/videos/covers/myotaku-ui-micro-interactions.mp4",
+    },
+  },
+  {
+    id: "jurafuchs",
+    title: "JuraFuchs",
+    category: "2D Motion",
+    categories: ["2D Motion", "Interactive"],
+    discipline: "2D Motion · Interactive",
+    visual: "interface",
+    summary: "A 2D interface motion project created for JuraFuchs.",
+    services: ["2D motion", "UI animation", "Interaction design"],
+    coverVideo: {
+      webm: "/videos/covers/jurafuchs-ui-animation.webm",
+      mp4: "/videos/covers/jurafuchs-ui-animation.mp4",
+    },
+  },
+  {
+    id: "sirf",
+    title: "Sirf",
+    category: "2D Motion",
+    categories: ["2D Motion", "Interactive"],
+    discipline: "2D Motion · Interactive",
+    visual: "interface",
+    summary: "A 2D interface motion project created for Sirf.",
+    services: ["2D motion", "UI animation", "Interaction design"],
+    coverVideo: {
+      webm: "/videos/covers/sirf-ui-animation.webm",
+      mp4: "/videos/covers/sirf-ui-animation.mp4",
+    },
+  },
+  {
+    id: "meallogix",
+    title: "MealLogix",
+    category: "2D Motion",
+    categories: ["2D Motion", "Interactive"],
+    discipline: "2D Motion · Interactive",
+    visual: "interface",
+    summary: "A 2D interface motion project created for MealLogix.",
+    services: ["2D motion", "UI animation", "Interaction design"],
+    coverVideo: {
+      webm: "/videos/covers/meallogix-ui-animation.webm",
+      mp4: "/videos/covers/meallogix-ui-animation.mp4",
+    },
   },
   {
     id: "volume-based-fees",
@@ -119,4 +185,8 @@ export const projects: Project[] = [
 
 export function getProject(id: string) {
   return projects.find((project) => project.id === id);
+}
+
+export function getProjectCategories(project: Project) {
+  return project.categories ?? [project.category];
 }

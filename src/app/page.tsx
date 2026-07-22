@@ -7,7 +7,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { useMemo, useRef, useState } from "react";
 import { ProjectCard } from "./components/ProjectCard";
-import { filters, projects, type ProjectFilter } from "@/data/projects";
+import { FooterSocialLinks } from "./components/FooterSocialLinks";
+import { filters, getProjectCategories, projects, type ProjectFilter } from "@/data/projects";
 
 gsap.registerPlugin(useGSAP, ScrollTrigger);
 
@@ -26,6 +27,8 @@ const clientLogos = [
   { id: "teachable", src: "/clients/teachable.svg", alt: "Teachable" },
   { id: "infinitepay", src: "/clients/infinitepay.svg", alt: "InfinitePay" },
   { id: "vizuo", src: "/clients/vizuo.svg", alt: "Vizuo" },
+  { id: "drata", src: "/clients/drata.svg", alt: "Drata" },
+  { id: "jurafuchs", src: "/clients/jurafuchs.svg", alt: "JuraFuchs" },
 ];
 
 function VideoShowreel() {
@@ -47,13 +50,14 @@ function VideoShowreel() {
 
 export default function Home() {
   const pageRef = useRef<HTMLElement>(null);
+  const bioPortraitRef = useRef<HTMLDivElement>(null);
   const [activeFilter, setActiveFilter] = useState<ProjectFilter>("All");
 
   const filteredProjects = useMemo(
     () =>
       activeFilter === "All"
         ? projects
-        : projects.filter((project) => project.category === activeFilter),
+        : projects.filter((project) => getProjectCategories(project).includes(activeFilter)),
     [activeFilter],
   );
 
@@ -66,17 +70,17 @@ export default function Home() {
           defaults: { duration: 1.05, ease: "power4.out" },
         });
 
-        intro
-          .from(".hero-line-text", {
-            yPercent: 115,
-            rotation: 2,
-            stagger: 0.1,
-          })
-          .from(
-            ".hero-meta",
-            { y: 18, autoAlpha: 0, stagger: 0.08, duration: 0.65 },
-            0.35,
-          );
+        intro.from(".hero-line-text", {
+          yPercent: 115,
+          rotation: 2,
+          stagger: 0.1,
+        });
+
+        intro.from(
+          ".hero-meta",
+          { y: 18, autoAlpha: 0, stagger: 0.08, duration: 0.65 },
+          0.35,
+        );
 
         gsap.fromTo(
           ".video-frame",
@@ -119,18 +123,139 @@ export default function Home() {
           },
         });
 
+        gsap.fromTo(
+          bioPortraitRef.current,
+          { yPercent: -38 },
+          {
+            yPercent: 38,
+            force3D: false,
+            ease: "none",
+            scrollTrigger: {
+              trigger: ".bio-section",
+              start: "top bottom",
+              end: "bottom top",
+              scrub: 0.8,
+            },
+          },
+        );
+
         gsap.from(".projects-title-line", {
-          yPercent: 110,
-          stagger: 0.08,
-          duration: 1,
+          yPercent: 115,
+          rotation: 2,
+          stagger: 0.1,
+          duration: 1.05,
           ease: "power4.out",
+          transformOrigin: "left bottom",
           scrollTrigger: {
             trigger: ".projects-heading",
             start: "top 78%",
             toggleActions: "play none none reverse",
           },
         });
+
+        gsap.from(".contact-title-line", {
+          yPercent: 115,
+          rotation: 2,
+          stagger: 0.1,
+          duration: 1.05,
+          ease: "power4.out",
+          transformOrigin: "left bottom",
+          scrollTrigger: {
+            trigger: ".contact-copy",
+            start: "top 78%",
+            toggleActions: "play none none reverse",
+          },
+        });
       }, pageRef);
+
+      return () => mm.revert();
+    },
+    { scope: pageRef },
+  );
+
+  useGSAP(
+    () => {
+      const grid = pageRef.current?.querySelector<HTMLElement>(".client-logo-grid");
+      if (!grid) return;
+
+      const mm = gsap.matchMedia();
+
+      mm.add(
+        "(prefers-reduced-motion: no-preference) and (hover: hover) and (pointer: fine)",
+        () => {
+          const magnets = gsap.utils.toArray<HTMLElement>(
+            ".client-logo-magnet",
+            grid,
+          );
+          const slots = gsap.utils.toArray<HTMLElement>(
+            ".client-logo-slot",
+            grid,
+          );
+          const setters = magnets.map((magnet) => {
+            const scaleX = gsap.quickTo(magnet, "scaleX", {
+              duration: 0.38,
+              ease: "power3.out",
+            });
+            const scaleY = gsap.quickTo(magnet, "scaleY", {
+              duration: 0.38,
+              ease: "power3.out",
+            });
+
+            return {
+              scale: (value: number) => {
+                scaleX(value);
+                scaleY(value);
+              },
+              x: gsap.quickTo(magnet, "x", {
+                duration: 0.48,
+                ease: "power3.out",
+              }),
+              y: gsap.quickTo(magnet, "y", {
+                duration: 0.48,
+                ease: "power3.out",
+              }),
+            };
+          });
+
+          const resetMagnets = () => {
+            setters.forEach((setter) => {
+              setter.scale(1);
+              setter.x(0);
+              setter.y(0);
+            });
+          };
+
+          const handlePointerMove = (event: PointerEvent) => {
+            const gridRect = grid.getBoundingClientRect();
+            const radius = Math.max(240, gridRect.width * 0.22);
+            const positions = slots.map((slot) => {
+              const rect = slot.getBoundingClientRect();
+              const dx = event.clientX - (rect.left + rect.width / 2);
+              const dy = event.clientY - (rect.top + rect.height / 2);
+              const distance = Math.hypot(dx, dy);
+              const proximity = gsap.utils.clamp(0, 1, 1 - distance / radius);
+
+              return { dx, dy, proximity };
+            });
+
+            positions.forEach(({ dx, dy, proximity }, index) => {
+              setters[index].scale(1.004 + proximity * 0.075);
+              setters[index].x(dx * proximity * 0.035);
+              setters[index].y(dy * proximity * 0.035);
+            });
+          };
+
+          grid.addEventListener("pointermove", handlePointerMove, { passive: true });
+          grid.addEventListener("pointerleave", resetMagnets);
+
+          return () => {
+            grid.removeEventListener("pointermove", handlePointerMove);
+            grid.removeEventListener("pointerleave", resetMagnets);
+            gsap.set(magnets, { clearProps: "transform" });
+          };
+        },
+        grid,
+      );
 
       return () => mm.revert();
     },
@@ -163,19 +288,25 @@ export default function Home() {
     <main ref={pageRef} className="site-shell">
       <section className="hero grid-surface section-pad" id="top">
         <div className="hero-topline hero-meta">
-          <span>Motion designer &amp; creative developer</span>
+          <span>Motion Designer</span>
           <span>Florianópolis, Brazil · 27.59° S</span>
         </div>
 
-        <h1 className="hero-title hero-title-intro" aria-label="Hi, I'm Lucas, a Brazil based motion designer and Art Director">
-          <span className="hero-line"><span className="hero-line-text">Hi, I&apos;m Lucas,</span></span>
-          <span className="hero-line hero-line-indent"><span className="hero-line-text">a Brazil based</span></span>
-          <span className="hero-line"><span className="hero-line-text">motion designer</span></span>
-          <span className="hero-line hero-line-last"><span className="hero-line-text">&amp; Art Director</span></span>
-        </h1>
+        <div className="hero-copy">
+          <h1 className="hero-title hero-title-intro" aria-label="Hi, I'm Lucas Souza, a Brazil based Motion Designer and Art Director">
+            <span className="hero-line"><span className="hero-line-text">Hi, I&apos;m Lucas Souza,</span></span>
+            <span className="hero-line hero-line-indent"><span className="hero-line-text">a Brazil based</span></span>
+            <span className="hero-line"><span className="hero-line-text">Motion Designer</span></span>
+            <span className="hero-line hero-line-last"><span className="hero-line-text">&amp; Art Director</span></span>
+          </h1>
+          <p className="hero-subtitle hero-meta">
+            with 8+ years of experience in 2D and 3D animation. I&apos;ve worked on brand campaigns,
+            product videos, broadcast graphics, and everything in between, always focused on making
+            ideas feel alive.
+          </p>
+        </div>
 
         <div className="hero-bottom hero-meta">
-          <p>2D/3D Motion Designer — Art Director — Designer</p>
           <a href="#reel">Scroll to explore <span aria-hidden="true">↓</span></a>
         </div>
       </section>
@@ -184,13 +315,15 @@ export default function Home() {
         <div className="client-logo-grid">
           {clientLogos.map((logo) => (
             <div className="client-logo-slot" key={logo.alt}>
-              <Image
-                src={logo.src}
-                alt={logo.alt}
-                width={300}
-                height={100}
-                className={`client-logo-image client-logo--${logo.id}`}
-              />
+              <div className="client-logo-magnet">
+                <Image
+                  src={logo.src}
+                  alt={logo.alt}
+                  width={300}
+                  height={100}
+                  className={`client-logo-image client-logo--${logo.id}`}
+                />
+              </div>
             </div>
           ))}
         </div>
@@ -199,6 +332,16 @@ export default function Home() {
       <VideoShowreel />
 
       <section className="bio-section section-pad grid-surface" aria-labelledby="about-title">
+        <div ref={bioPortraitRef} className="bio-portrait" aria-hidden="true">
+          <Image
+            src="/images/Lucas_Souza_Photo.png"
+            alt=""
+            width={1254}
+            height={1254}
+            sizes="(max-width: 640px) 56vw, 22vw"
+            className="bio-portrait-image"
+          />
+        </div>
         <h2 className="sr-only" id="about-title">About Lucas</h2>
         <p className="bio-reveal-copy" aria-label={ABOUT_COPY}>
           {ABOUT_COPY.split(" ").map((word, index) => (
@@ -250,13 +393,22 @@ export default function Home() {
       <section className="contact-section section-pad" id="contact">
         <div className="contact-copy">
           <p>Have a project in mind?</p>
-          <h2>Let&apos;s<br /><em>Talk.</em></h2>
+          <h2 aria-label="Let's Talk.">
+            <span className="contact-title-mask" aria-hidden="true">
+              <span className="contact-title-line">Let&apos;s</span>
+            </span>
+            <span className="contact-title-mask" aria-hidden="true">
+              <em className="contact-title-line">Talk.</em>
+            </span>
+          </h2>
         </div>
 
         <div className="contact-links">
           <a href="mailto:lucassouzajr@gmail.com">lucassouzajr@gmail.com <span aria-hidden="true">↗</span></a>
           <Link href="/contact">Start a project <span aria-hidden="true">↗</span></Link>
         </div>
+
+        <FooterSocialLinks />
 
         <div className="footer-note">
           <span>Lucas Souza © 2026</span>

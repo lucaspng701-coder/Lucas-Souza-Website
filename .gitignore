@@ -42,3 +42,6 @@ next-env.d.ts
 
 .vercel
 .env*.local
+
+# local source animations (optimized videos are committed instead)
+/public/images/*.gif

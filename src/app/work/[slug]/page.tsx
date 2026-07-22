@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getProject, projects } from "@/data/projects";
+import { ProjectLoopVideo } from "@/app/components/ProjectLoopVideo";
+import { getProject, getProjectCategories, projects } from "@/data/projects";
 
 export function generateStaticParams() {
   return projects.map((project) => ({ slug: project.id }));
@@ -41,7 +42,7 @@ export default async function ProjectPage({
       <section className="project-page-hero section-pad">
         <div className="page-eyebrow">
           <Link href="/work">← All work</Link>
-          <span>{project.category}{project.year ? ` / ${project.year}` : ""}</span>
+          <span>{getProjectCategories(project).join(" / ")}{project.year ? ` / ${project.year}` : ""}</span>
         </div>
         <h1>{project.title}</h1>
         <div className="project-page-intro">
@@ -64,6 +65,10 @@ export default async function ProjectPage({
               allowFullScreen
             />
           </div>
+        ) : project.coverVideo ? (
+          <div className="project-video-frame">
+            <ProjectLoopVideo video={project.coverVideo} className="project-page-cover-video" />
+          </div>
         ) : (
           <div className="project-visual project-visual-large" data-visual={project.visual}>
             <span className="project-index">LS / {String(currentIndex + 1).padStart(2, "0")}</span>
@@ -85,7 +90,7 @@ export default async function ProjectPage({
       </section>
 
       <Link className="next-project section-pad" href={`/work/${nextProject.id}`}>
-        <span>Next project</span>
+        <span className="next-project-label">Next Project</span>
         <strong>{nextProject.title}</strong>
         <span aria-hidden="true">↗</span>
       </Link>

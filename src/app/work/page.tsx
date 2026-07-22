@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
+import { PageTitleReveal } from "../components/PageTitleReveal";
 import { ProjectCard } from "../components/ProjectCard";
+import { FooterSocialLinks } from "../components/FooterSocialLinks";
 import { projects } from "@/data/projects";
 
 export const metadata: Metadata = {
@@ -15,7 +17,7 @@ export default function WorkPage() {
           <span>Index / 01—{String(projects.length).padStart(2, "0")}</span>
           <span>Motion · Design · Interaction</span>
         </div>
-        <h1>Selected<br /><em>work.</em></h1>
+        <PageTitleReveal firstLine="Selected" secondLine="Works." />
         <p>A collection of motion systems, visual experiments and interactive experiences.</p>
       </section>
 
@@ -26,6 +28,10 @@ export default function WorkPage() {
           ))}
         </div>
       </section>
+
+      <footer className="inner-social-footer section-pad">
+        <FooterSocialLinks dark />
+      </footer>
     </main>
   );
 }
