@@ -8,6 +8,7 @@ import Link from "next/link";
 import { useMemo, useRef, useState } from "react";
 import { ProjectCard } from "./components/ProjectCard";
 import { FooterSocialLinks } from "./components/FooterSocialLinks";
+import { HeroKineticGrid } from "./components/HeroKineticGrid";
 import { filters, getProjectCategories, projects, type ProjectFilter } from "@/data/projects";
 
 gsap.registerPlugin(useGSAP, ScrollTrigger);
@@ -287,6 +288,7 @@ export default function Home() {
   return (
     <main ref={pageRef} className="site-shell">
       <section className="hero grid-surface section-pad" id="top">
+        <HeroKineticGrid />
         <div className="hero-topline hero-meta">
           <span>Motion Designer</span>
           <span>Florianópolis, Brazil · 27.59° S</span>

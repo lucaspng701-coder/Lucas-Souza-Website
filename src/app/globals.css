@@ -123,6 +123,7 @@ button {
 
 .hero {
   position: relative;
+  overflow: hidden;
   min-height: 100svh;
   padding-top: 5.8rem;
   padding-bottom: 2rem;
@@ -132,16 +133,17 @@ button {
   border-bottom: 1px solid var(--line);
 }
 
-.hero::before {
-  content: "";
+.hero-kinetic-grid {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  z-index: 0;
-  opacity: 0.18;
-  background-image: radial-gradient(rgba(255,255,255,0.25) 0.6px, transparent 0.6px);
-  background-size: 4px 4px;
-  mask-image: linear-gradient(to bottom, black, transparent 72%);
+  z-index: 1;
+}
+
+.hero-kinetic-grid canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
 }
 
 .hero-topline,
@@ -1049,6 +1051,57 @@ button {
   object-fit: cover;
 }
 
+.project-parallax-gallery {
+  width: 88%;
+  margin-inline: auto;
+  padding-top: clamp(5rem, 10vw, 11rem);
+  display: grid;
+  gap: clamp(2rem, 5vw, 6rem);
+}
+
+.project-parallax-frame {
+  position: relative;
+  width: 100%;
+  margin: 0;
+  overflow: hidden;
+  border-radius: 16px;
+  background: #111;
+  isolation: isolate;
+}
+
+.project-parallax-wide {
+  aspect-ratio: 16 / 9;
+}
+
+.project-parallax-shallow {
+  aspect-ratio: 16 / 7.8;
+}
+
+.project-parallax-square {
+  aspect-ratio: 1;
+}
+
+.project-parallax-pair {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(1rem, 2vw, 2rem);
+}
+
+.project-parallax-centered {
+  width: min(62%, 52rem);
+  margin-inline: auto;
+}
+
+.project-parallax-image {
+  position: absolute;
+  inset: -12% 0;
+  will-change: transform;
+}
+
+.project-parallax-image img {
+  object-fit: cover;
+}
+
 .project-page-notes {
   width: 88%;
   margin-inline: auto;
@@ -1227,6 +1280,7 @@ button {
   .projects-inner,
   .work-index-grid,
   .project-page-media,
+  .project-parallax-gallery,
   .project-page-notes { width: 100%; }
   .video-frame { aspect-ratio: 16 / 9; }
   .client-logo-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -1258,6 +1312,9 @@ button {
   .project-page-intro { gap: 2rem; }
   .project-page-intro > p { font-size: 1.6rem; }
   .project-visual-large { aspect-ratio: 4 / 5; }
+  .project-parallax-gallery { gap: 1rem; }
+  .project-parallax-pair { grid-template-columns: 1fr; gap: 1rem; }
+  .project-parallax-centered { width: 100%; }
   .project-page-notes { gap: 3rem; }
   .next-project { min-height: 38svh; }
   .contact-page-links { grid-template-columns: 1fr; }
@@ -1273,6 +1330,7 @@ button {
     transition-duration: 0.01ms !important;
   }
   .bio-word { color: var(--paper); }
+  .project-parallax-image { inset: 0; will-change: auto; }
 }
 
 @media (max-width: 768px) and (prefers-reduced-motion: no-preference) {

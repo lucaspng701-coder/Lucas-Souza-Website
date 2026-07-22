@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { ProjectParallaxGallery } from "@/app/components/ProjectParallaxGallery";
 import { ProjectLoopVideo } from "@/app/components/ProjectLoopVideo";
 import { getProject, getProjectCategories, projects } from "@/data/projects";
 
@@ -77,6 +78,8 @@ export default async function ProjectPage({
           </div>
         )}
       </section>
+
+      {project.id === "noro-watch" && <ProjectParallaxGallery />}
 
       <section className="project-page-notes section-pad">
         <div>
