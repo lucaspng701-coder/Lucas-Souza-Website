@@ -1,3 +1,6 @@
 public/images/*.gif
 public/images/heropic.png
 public/images/Infinitepay_Random Renders.png
+
+# Original project media is never deployed
+media-source/

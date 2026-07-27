@@ -5,24 +5,20 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
 import { useRef } from "react";
+import type {
+  ProjectGalleryImage,
+  ProjectGalleryRow,
+} from "@/data/projects";
 
 gsap.registerPlugin(useGSAP, ScrollTrigger);
 
-type GalleryImage = {
-  src: string;
-  alt: string;
-  position?: string;
-};
-
-const images: GalleryImage[] = [
-  { src: "/images/test/SKANv2.png", alt: "SKAN drone campaign composition" },
-  { src: "/images/test/Edit.png", alt: "InfinitePay black card render" },
-  { src: "/images/test/Edit03.png", alt: "InfinitePay white card render" },
-  { src: "/images/test/F2 2.png", alt: "Black SKAN drone render" },
-  { src: "/images/test/btc_720.png", alt: "Bitcoin product interface render" },
-];
-
-export function ProjectParallaxGallery() {
+export function ProjectParallaxGallery({
+  projectTitle,
+  rows,
+}: {
+  projectTitle: string;
+  rows: ProjectGalleryRow[];
+}) {
   const galleryRef = useRef<HTMLElement>(null);
 
   useGSAP(
@@ -69,16 +65,39 @@ export function ProjectParallaxGallery() {
   );
 
   return (
-    <section className="project-parallax-gallery" ref={galleryRef} aria-label="Project image study">
-      <ParallaxFrame image={images[0]} className="project-parallax-wide" priority />
-
-      <div className="project-parallax-pair">
-        <ParallaxFrame image={images[1]} className="project-parallax-square" />
-        <ParallaxFrame image={images[2]} className="project-parallax-square" />
-      </div>
-
-      <ParallaxFrame image={images[3]} className="project-parallax-wide project-parallax-shallow" />
-      <ParallaxFrame image={images[4]} className="project-parallax-square project-parallax-centered" />
+    <section
+      className="project-parallax-gallery"
+      ref={galleryRef}
+      aria-label={`${projectTitle} gallery`}
+    >
+      {rows.map((row, rowIndex) =>
+        row.type === "pair" ? (
+          <div className="project-parallax-pair" key={`pair-${rowIndex}`}>
+            {row.images.map((image) => (
+              <ParallaxFrame
+                image={image}
+                className={`project-parallax-${image.aspect}`}
+                key={image.src}
+                sizes="(max-width: 768px) 100vw, 44vw"
+              />
+            ))}
+          </div>
+        ) : (
+          <ParallaxFrame
+            image={row.image}
+            className={`project-parallax-${row.image.aspect}${
+              row.width === "narrow" ? " project-parallax-centered" : ""
+            }`}
+            key={row.image.src}
+            priority={rowIndex === 0}
+            sizes={
+              row.width === "narrow"
+                ? "(max-width: 768px) 100vw, 55vw"
+                : "(max-width: 768px) 100vw, 88vw"
+            }
+          />
+        ),
+      )}
     </section>
   );
 }
@@ -87,10 +106,12 @@ function ParallaxFrame({
   image,
   className,
   priority = false,
+  sizes,
 }: {
-  image: GalleryImage;
+  image: ProjectGalleryImage;
   className: string;
   priority?: boolean;
+  sizes: string;
 }) {
   return (
     <figure className={`project-parallax-frame ${className}`} data-parallax-frame>
@@ -100,7 +121,7 @@ function ParallaxFrame({
           alt={image.alt}
           fill
           priority={priority}
-          sizes="(max-width: 768px) 100vw, 88vw"
+          sizes={sizes}
           style={{ objectPosition: image.position ?? "center center" }}
         />
       </div>

@@ -49,10 +49,24 @@ export default async function ProjectPage({
         <div className="project-page-intro">
           <p>{project.summary}</p>
           <dl>
-            <div><dt>Discipline</dt><dd>{project.discipline}</dd></div>
+            <div>
+              <dt>Software used</dt>
+              <dd>
+                <ul>
+                  {project.software.map((software) => (
+                    <li key={software}>{software}</li>
+                  ))}
+                </ul>
+              </dd>
+            </div>
             {project.year && <div><dt>Year</dt><dd>{project.year}</dd></div>}
           </dl>
         </div>
+      </section>
+
+      <section className="project-page-overview section-pad">
+        <span className="notes-label">About the project</span>
+        <p>{project.description}</p>
       </section>
 
       <section className="project-page-media section-pad" aria-label={`${project.title} visual`}>
@@ -79,16 +93,38 @@ export default async function ProjectPage({
         )}
       </section>
 
-      {project.id === "noro-watch" && <ProjectParallaxGallery />}
+      {project.gallery?.length ? (
+        <ProjectParallaxGallery
+          projectTitle={project.title}
+          rows={project.gallery}
+        />
+      ) : null}
+
+      {project.detailVideos?.map((video) => (
+        <section
+          className="project-detail-media section-pad"
+          aria-label={video.title}
+          key={video.src}
+        >
+          <span className="notes-label">{video.label ?? "Project film"}</span>
+          <div className="project-video-frame project-detail-video-frame">
+            <video controls playsInline preload="metadata">
+              <source src={video.src} type="video/mp4" />
+            </video>
+          </div>
+        </section>
+      ))}
 
       <section className="project-page-notes section-pad">
-        <div>
-          <span className="notes-label">Approach</span>
-          <p>The work is shaped through quick visual tests, clear systems and careful attention to how every transition feels in context.</p>
-        </div>
-        <div>
-          <span className="notes-label">Services</span>
-          <ul>{project.services.map((service) => <li key={service}>{service}</li>)}</ul>
+        <div className="project-page-facts">
+          <div className="project-page-fact">
+            <span className="notes-label">Client</span>
+            <ul>{project.client.map((client) => <li key={client}>{client}</li>)}</ul>
+          </div>
+          <div className="project-page-fact">
+            <span className="notes-label">Services</span>
+            <ul>{project.services.map((service) => <li key={service}>{service}</li>)}</ul>
+          </div>
         </div>
       </section>
 

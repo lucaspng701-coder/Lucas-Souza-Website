@@ -6,18 +6,53 @@ export type ProjectCoverVideo = {
   mp4: string;
 };
 
+export type ProjectCoverImage = {
+  src: string;
+  alt: string;
+};
+
+export type ProjectDetailVideo = {
+  src: string;
+  title: string;
+  label?: string;
+};
+
+export type ProjectGalleryImage = {
+  src: string;
+  alt: string;
+  aspect: "wide" | "shallow" | "square";
+  position?: string;
+};
+
+export type ProjectGalleryRow =
+  | {
+      type: "single";
+      image: ProjectGalleryImage;
+      width?: "full" | "narrow";
+    }
+  | {
+      type: "pair";
+      images: [ProjectGalleryImage, ProjectGalleryImage];
+    };
+
 export type Project = {
   id: string;
   title: string;
   category: ProjectCategory;
   categories?: ProjectCategory[];
+  client: string[];
   discipline: string;
   year?: string;
   visual: string;
   summary: string;
+  description: string;
   services: string[];
+  software: string[];
   vimeoId?: string;
   coverVideo?: ProjectCoverVideo;
+  coverImage?: ProjectCoverImage;
+  detailVideos?: ProjectDetailVideo[];
+  gallery?: ProjectGalleryRow[];
 };
 
 export const filters: ProjectFilter[] = [
@@ -32,38 +67,97 @@ export const projects: Project[] = [
     id: "noro-watch",
     title: "Noro Watch",
     category: "3D Motion",
+    client: ["Noro"],
     discipline: "3D Motion · Product Film",
     visual: "orb",
     summary: "A 3D product film created for Noro Watch.",
+    description: "A product-focused 3D film created to bring Noro Watch's industrial design and material details into focus. Precise metallic surfaces, dark natural textures and warm red accents shape a tactile visual world built around the character of the watch.",
     services: ["3D motion", "Art direction", "Product visualization"],
+    software: ["Figma", "Cinema 4D", "After Effects", "Redshift"],
     vimeoId: "1093804333",
     coverVideo: {
       webm: "/videos/covers/noro-watch.webm",
       mp4: "/videos/covers/noro-watch.mp4",
     },
+    gallery: [
+      {
+        type: "single",
+        image: {
+          src: "/media/projects/noro-watch/images/noro.webp",
+          alt: "A collection of Noro Watch product renders",
+          aspect: "wide",
+        },
+      },
+      {
+        type: "pair",
+        images: [
+          {
+            src: "/media/projects/noro-watch/images/scene-100-v2-0031.webp",
+            alt: "Noro Watch case resting on a dark stone surface",
+            aspect: "square",
+          },
+          {
+            src: "/media/projects/noro-watch/images/scene-400-nf0160.webp",
+            alt: "Noro Watch product detail with warm red lighting",
+            aspect: "square",
+          },
+        ],
+      },
+      {
+        type: "single",
+        image: {
+          src: "/media/projects/noro-watch/images/scene-350-0160.webp",
+          alt: "Noro Watch floating between dark rock formations",
+          aspect: "shallow",
+        },
+      },
+      {
+        type: "single",
+        width: "narrow",
+        image: {
+          src: "/media/projects/noro-watch/images/scene-400-nf-blur0159.webp",
+          alt: "Noro Watch close-up with motion blur",
+          aspect: "square",
+        },
+      },
+    ],
   },
   {
     id: "myotaku-ui-micro-interactions",
     title: "Myotaku — UI Micro Interactions",
     category: "Interactive",
+    client: ["Myotaku", "AtomSix Design Studio"],
     discipline: "Interactive · UI Motion",
     visual: "interface",
     summary: "A collection of playful UI micro interactions created for Myotaku.",
+    description: "A motion system exploring how small interactions can make a digital product feel more responsive, expressive and alive. Each transition supports clarity while adding a distinct sense of personality to the interface.",
     services: ["UI motion", "Interaction design", "Motion design"],
+    software: ["Figma", "After Effects"],
+    vimeoId: "1094198704",
     coverVideo: {
       webm: "/videos/covers/myotaku-ui-micro-interactions.webm",
       mp4: "/videos/covers/myotaku-ui-micro-interactions.mp4",
     },
+    detailVideos: [
+      {
+        src: "/media/projects/myotaku-ui-micro-interactions/videos/behind-the-scenes.mp4",
+        title: "Myotaku behind the scenes",
+        label: "Behind the scenes",
+      },
+    ],
   },
   {
     id: "jurafuchs",
-    title: "JuraFuchs",
+    title: "Jurafuchs - UI Animation",
     category: "2D Motion",
     categories: ["2D Motion", "Interactive"],
+    client: ["Jurafuchs"],
     discipline: "2D Motion · Interactive",
     visual: "interface",
-    summary: "A 2D interface motion project created for JuraFuchs.",
+    summary: "A 2D interface motion project created for Jurafuchs.",
+    description: "A series of interface animations developed to make complex product moments feel simple and intuitive. The work combines clear visual hierarchy with lightweight, characterful motion across the experience.",
     services: ["2D motion", "UI animation", "Interaction design"],
+    software: ["Figma", "After Effects"],
     coverVideo: {
       webm: "/videos/covers/jurafuchs-ui-animation.webm",
       mp4: "/videos/covers/jurafuchs-ui-animation.mp4",
@@ -74,10 +168,13 @@ export const projects: Project[] = [
     title: "Sirf",
     category: "2D Motion",
     categories: ["2D Motion", "Interactive"],
+    client: ["Sirf"],
     discipline: "2D Motion · Interactive",
     visual: "interface",
     summary: "A 2D interface motion project created for Sirf.",
+    description: "A collection of product and interface moments shaped through a direct, rhythmic motion language. The system helps guide attention, connect states and give the experience a more confident personality.",
     services: ["2D motion", "UI animation", "Interaction design"],
+    software: ["Figma", "After Effects"],
     coverVideo: {
       webm: "/videos/covers/sirf-ui-animation.webm",
       mp4: "/videos/covers/sirf-ui-animation.mp4",
@@ -85,13 +182,17 @@ export const projects: Project[] = [
   },
   {
     id: "meallogix",
-    title: "MealLogix",
+    title: "Meallogix - UI Animation",
     category: "2D Motion",
     categories: ["2D Motion", "Interactive"],
+    client: ["Meallogix"],
     discipline: "2D Motion · Interactive",
     visual: "interface",
-    summary: "A 2D interface motion project created for MealLogix.",
+    summary: "A 2D interface motion project created for Meallogix.",
+    description: "An interface motion study focused on turning everyday product actions into a clear and approachable flow. Transitions connect information, feedback and navigation while keeping the experience light and easy to follow.",
     services: ["2D motion", "UI animation", "Interaction design"],
+    software: ["Figma", "After Effects"],
+    vimeoId: "849287986",
     coverVideo: {
       webm: "/videos/covers/meallogix-ui-animation.webm",
       mp4: "/videos/covers/meallogix-ui-animation.mp4",
@@ -101,84 +202,115 @@ export const projects: Project[] = [
     id: "volume-based-fees",
     title: "Volume Based Fees — InfinitePay",
     category: "3D Motion",
+    client: ["InfinitePay"],
     discipline: "3D Motion · Product Communication",
     visual: "orbit",
     summary: "A 3D motion piece explaining InfinitePay's volume based fees.",
+    description: "A product communication film designed to turn a pricing concept into a clear visual story. Bold 3D forms and precise transitions explain the system while staying connected to InfinitePay's energetic brand language.",
     services: ["3D motion", "Look development", "Product communication"],
+    software: ["Cinema 4D", "After Effects", "Redshift"],
     vimeoId: "1093901208",
+    coverImage: {
+      src: "/media/projects/volume-based-fees/images/cover.webp",
+      alt: "InfinitePay card machine on a creative studio desk",
+    },
   },
   {
     id: "lightness-infinitepay",
     title: "Lightness — InfinitePay",
     category: "3D Motion",
+    client: ["InfinitePay"],
     discipline: "3D Motion · Brand Film",
     visual: "kinetic",
     summary: "A 3D brand motion study developed for InfinitePay.",
+    description: "A visual exploration of lightness expressed through material, movement and space. The piece combines refined 3D imagery with a playful sense of motion to give the brand idea a physical presence.",
     services: ["3D motion", "Art direction", "Brand animation"],
+    software: ["Cinema 4D", "After Effects", "Redshift"],
     vimeoId: "1093848809",
   },
   {
     id: "teachable-payments",
     title: "Teachable Payments",
     category: "2D Motion",
+    client: ["Teachable"],
     discipline: "2D Motion · Product",
     visual: "interface",
     summary: "A 2D product motion project for Teachable Payments.",
+    description: "A product film created to introduce a payments experience through clear, friendly motion. Interface details, typography and graphic transitions work together to make the product easy to understand at a glance.",
     services: ["2D motion", "Product animation", "Motion design"],
+    software: ["Figma", "Illustrator", "After Effects"],
   },
   {
     id: "ai-avengers",
     title: "AI Avengers — Teachable",
     category: "2D Motion",
+    client: ["Teachable"],
     discipline: "2D Motion · Campaign",
     visual: "type",
     summary: "A campaign motion project created for Teachable.",
+    description: "A campaign animation built around a bold cast of ideas and an energetic graphic language. Expressive typography and fast-paced transitions give the story momentum while keeping the message playful and accessible.",
     services: ["2D motion", "Campaign animation", "Motion design"],
+    software: ["Illustrator", "After Effects"],
   },
   {
     id: "b2b-bulk-distribution",
     title: "B2B Bulk Distribution — Teachable",
     category: "2D Motion",
+    client: ["Teachable"],
     discipline: "2D Motion · Product",
     visual: "signal",
     summary: "A 2D product communication piece created for Teachable.",
+    description: "A product story designed to explain a complex B2B workflow with clarity and pace. Structured compositions and purposeful transitions turn a multi-step process into a simple, cohesive narrative.",
     services: ["2D motion", "Product animation", "Visual storytelling"],
+    software: ["Figma", "Illustrator", "After Effects"],
   },
   {
     id: "teachable",
     title: "Teachable",
     category: "2D Motion",
+    client: ["Teachable"],
     discipline: "2D Motion · Brand",
     visual: "orbit",
     summary: "A 2D brand motion project created for Teachable.",
+    description: "A brand motion exploration developed to bring consistency and personality across a wide range of communication moments. The system balances expressive movement with flexible rules that can scale across formats.",
     services: ["2D motion", "Brand animation", "Motion system"],
+    software: ["Illustrator", "After Effects"],
   },
   {
     id: "enterprise-teachable",
     title: "Enterprise — Teachable",
     category: "Interactive",
+    client: ["Teachable"],
     discipline: "Interactive · Product",
     visual: "interface",
     summary: "An interactive product experience created for Teachable Enterprise.",
+    description: "An interactive product experience shaped to communicate scale, flexibility and confidence. Motion supports the information architecture and creates continuity as users move through the enterprise story.",
     services: ["Interaction design", "UX/UI motion", "Creative development"],
+    software: ["Figma", "After Effects"],
   },
   {
     id: "threejs-game-vibejam",
     title: "Three.js Game Vibejam",
     category: "Interactive",
+    client: ["Independent"],
     discipline: "Interactive · Creative Development",
     visual: "kinetic",
     summary: "An interactive Three.js game experiment created for Vibejam.",
+    description: "A browser-based game experiment combining real-time 3D, playful interaction and rapid prototyping. The project explores how a compact set of mechanics can create an immediate and visually engaging experience.",
     services: ["Creative development", "Three.js", "Interaction design"],
+    software: ["Blender", "Three.js", "JavaScript"],
   },
   {
     id: "ui-motion-atomsix",
     title: "UI Motion — Atomsix",
     category: "2D Motion",
+    client: ["AtomSix Design Studio"],
     discipline: "2D Motion · UI",
     visual: "signal",
     summary: "A UI motion study created with Atomsix.",
+    description: "A focused study of interface transitions, feedback and micro interactions created with Atomsix. Motion works as a functional layer that connects states, guides attention and makes the product feel more polished.",
     services: ["UI motion", "2D animation", "Motion design"],
+    software: ["Figma", "After Effects"],
     vimeoId: "1094261707",
   },
 ];

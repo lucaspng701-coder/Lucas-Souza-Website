@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "media:folders": "node scripts/create-media-folders.mjs",
+    "media:optimize": "node scripts/optimize-project-images.mjs"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",
