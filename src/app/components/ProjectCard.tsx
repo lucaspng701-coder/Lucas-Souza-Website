@@ -1,20 +1,33 @@
 import Image from "next/image";
 import Link from "next/link";
-import { getProjectCategories, type Project } from "@/data/projects";
+import { type Project } from "@/data/projects";
 import { ProjectLoopVideo } from "./ProjectLoopVideo";
 
-export function ProjectCard({ project, index }: { project: Project; index: number }) {
+export function ProjectCard({ project }: { project: Project }) {
   return (
     <Link className="project-card" href={`/work/${project.id}`}>
       <article>
         <div
           className="project-visual"
-          data-visual={project.coverVideo || project.coverImage ? undefined : project.visual}
-          data-has-video={project.coverVideo ? "true" : undefined}
+          data-visual={project.coverVimeoId || project.coverVideo || project.coverImage ? undefined : project.visual}
+          data-has-video={project.coverVimeoId || project.coverVideo ? "true" : undefined}
           data-has-image={project.coverImage ? "true" : undefined}
         >
-          {project.coverVideo ? (
-            <ProjectLoopVideo video={project.coverVideo} className="project-cover-video" />
+          {project.coverVimeoId ? (
+            <iframe
+              className="project-cover-video project-cover-vimeo"
+              src={`https://player.vimeo.com/video/${project.coverVimeoId}?autoplay=1&muted=1&loop=1&background=1&autopause=0&title=0&byline=0&portrait=0&dnt=1`}
+              title={`${project.title} animated project cover by Lucas Souza`}
+              allow="autoplay; fullscreen; picture-in-picture"
+              loading="lazy"
+              tabIndex={-1}
+            />
+          ) : project.coverVideo ? (
+            <ProjectLoopVideo
+              video={project.coverVideo}
+              className="project-cover-video"
+              label={`${project.title} preview — SaaS product animation by Lucas Souza, 2D motion designer`}
+            />
           ) : project.coverImage ? (
             <Image
               className="project-cover-image"
@@ -26,17 +39,12 @@ export function ProjectCard({ project, index }: { project: Project; index: numbe
           ) : (
             <div className="visual-object" aria-hidden="true" />
           )}
-          <span className="project-index">{String(index + 1).padStart(2, "0")}</span>
           <span className="project-view">View project ↗</span>
         </div>
         <div className="project-info">
           <div>
             <h3>{project.title}</h3>
             <p>{project.discipline}</p>
-          </div>
-          <div className="project-meta">
-            <span>{getProjectCategories(project).join(" / ")}</span>
-            {project.year && <span>{project.year}</span>}
           </div>
         </div>
       </article>

@@ -17,27 +17,29 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://lucas-souza-portfolio-sigma.vercel.app"),
-  title: "Lucas Souza — Motion Designer & Creative Developer",
+  title: "Lucas Souza — SaaS Motion Designer & Art Director",
   description:
-    "Independent motion designer and creative developer bringing ideas to life through design, animation and interactive experiences.",
+    "Motion design for SaaS: product videos, launch films and UI animation for product and marketing teams in the US and Europe.",
   keywords: [
     "Lucas Souza",
-    "motion designer",
-    "creative developer",
+    "SaaS motion designer",
+    "product videos",
+    "launch films",
+    "UI animation",
+    "art director",
     "3D motion",
     "2D motion",
-    "interactive design",
   ],
   openGraph: {
-    title: "Lucas Souza — Design in Motion",
-    description: "I help brands bring ideas to life with design and motion.",
+    title: "Lucas Souza — SaaS Motion Designer & Art Director",
+    description: "Product videos, launch films and UI animation for SaaS teams.",
     type: "website",
     locale: "en_US",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Lucas Souza — Design in Motion",
-    description: "I help brands bring ideas to life with design and motion.",
+    title: "Lucas Souza — SaaS Motion Designer & Art Director",
+    description: "Product videos, launch films and UI animation for SaaS teams.",
   },
 };
 

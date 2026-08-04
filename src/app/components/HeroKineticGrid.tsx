@@ -11,16 +11,17 @@ type Dot = {
   velocityY: number;
 };
 
-type TrailPoint = {
+type Ripple = {
   x: number;
   y: number;
-  time: number;
+  startedAt: number;
 };
 
 const SPACING = 21;
 const RADIUS = 190;
 const PULL = 1.2;
-const TRAIL_LIFETIME = 240;
+const RIPPLE_DURATION = 1450;
+const RIPPLE_BAND = 82;
 
 export function HeroKineticGrid() {
   const hostRef = useRef<HTMLDivElement>(null);
@@ -45,7 +46,7 @@ export function HeroKineticGrid() {
     let columnCount = 0;
     let rowCount = 0;
     let dots: Dot[] = [];
-    let trail: TrailPoint[] = [];
+    let ripples: Ripple[] = [];
     let frameId = 0;
     let frameRunning = false;
     let heroVisible = true;
@@ -61,7 +62,12 @@ export function HeroKineticGrid() {
 
     const draw = (updatePhysics: boolean) => {
       const now = performance.now();
+      const rippleDistance = Math.hypot(width, height) * 0.72;
       let moving = false;
+
+      ripples = ripples.filter(
+        (ripple) => now - ripple.startedAt < RIPPLE_DURATION,
+      );
 
       context.clearRect(0, 0, width, height);
 
@@ -79,6 +85,22 @@ export function HeroKineticGrid() {
               const force = (1 - distance / RADIUS) * PULL;
               accelerationX += (deltaX / distance) * force;
               accelerationY += (deltaY / distance) * force;
+            }
+          }
+
+          for (const ripple of ripples) {
+            const progress = (now - ripple.startedAt) / RIPPLE_DURATION;
+            const radius = progress * rippleDistance;
+            const deltaX = dot.homeX - ripple.x;
+            const deltaY = dot.homeY - ripple.y;
+            const distance = Math.hypot(deltaX, deltaY);
+            const distanceFromWave = Math.abs(distance - radius);
+
+            if (distanceFromWave < RIPPLE_BAND && distance > 0.001) {
+              const wave = 1 - distanceFromWave / RIPPLE_BAND;
+              const strength = wave * (1 - progress) * 2.15;
+              accelerationX += (deltaX / distance) * strength;
+              accelerationY += (deltaY / distance) * strength;
             }
           }
 
@@ -144,28 +166,34 @@ export function HeroKineticGrid() {
         }
       }
 
-      trail = trail.filter((point) => now - point.time <= TRAIL_LIFETIME);
-      if (trail.length > 1) {
-        context.lineCap = "round";
-        context.lineJoin = "round";
-        context.strokeStyle = accent;
-        context.lineWidth = 2;
+      if (ripples.length > 0) {
+        for (const dot of dots) {
+          let rippleIntensity = 0;
 
-        for (let index = 1; index < trail.length; index += 1) {
-          const previous = trail[index - 1];
-          const point = trail[index];
-          const age = now - point.time;
+          for (const ripple of ripples) {
+            const progress = (now - ripple.startedAt) / RIPPLE_DURATION;
+            const radius = progress * rippleDistance;
+            const distance = Math.hypot(dot.homeX - ripple.x, dot.homeY - ripple.y);
+            const distanceFromWave = Math.abs(distance - radius);
+
+            if (distanceFromWave < RIPPLE_BAND) {
+              const wave = 1 - distanceFromWave / RIPPLE_BAND;
+              rippleIntensity = Math.max(rippleIntensity, wave * (1 - progress));
+            }
+          }
+
+          if (rippleIntensity <= 0) continue;
 
           context.beginPath();
-          context.moveTo(previous.x, previous.y);
-          context.lineTo(point.x, point.y);
-          context.globalAlpha = Math.max(0, 1 - age / TRAIL_LIFETIME) * 0.9;
-          context.stroke();
+          context.arc(dot.x, dot.y, 0.9 + rippleIntensity * 2.4, 0, Math.PI * 2);
+          context.globalAlpha = 0.18 + rippleIntensity * 0.78;
+          context.fillStyle = accent;
+          context.fill();
         }
       }
 
       context.globalAlpha = 1;
-      return moving || pointer.active || trail.length > 0;
+      return moving || pointer.active || ripples.length > 0;
     };
 
     const runFrame = () => {
@@ -225,14 +253,6 @@ export function HeroKineticGrid() {
       pointer.x = event.clientX - bounds.left;
       pointer.y = event.clientY - bounds.top;
       pointer.active = true;
-
-      const now = performance.now();
-      const lastPoint = trail.at(-1);
-      if (!lastPoint || Math.hypot(pointer.x - lastPoint.x, pointer.y - lastPoint.y) > 2.5) {
-        trail.push({ x: pointer.x, y: pointer.y, time: now });
-        if (trail.length > 48) trail.shift();
-      }
-
       requestFrame();
     };
 
@@ -243,10 +263,24 @@ export function HeroKineticGrid() {
       requestFrame();
     };
 
+    const handlePointerDown = (event: PointerEvent) => {
+      if (!interactive) return;
+
+      const bounds = hero.getBoundingClientRect();
+      ripples.push({
+        x: event.clientX - bounds.left,
+        y: event.clientY - bounds.top,
+        startedAt: performance.now(),
+      });
+
+      if (ripples.length > 3) ripples.shift();
+      requestFrame();
+    };
+
     const handleMotionPreference = () => {
       interactive = !reducedMotionQuery.matches && finePointerQuery.matches;
       pointer.active = false;
-      trail = [];
+      ripples = [];
       window.cancelAnimationFrame(frameId);
       frameRunning = false;
 
@@ -288,6 +322,7 @@ export function HeroKineticGrid() {
     resizeObserver.observe(host);
     intersectionObserver.observe(hero);
     hero.addEventListener("pointermove", handlePointerMove, { passive: true });
+    hero.addEventListener("pointerdown", handlePointerDown, { passive: true });
     hero.addEventListener("pointerleave", handlePointerLeave);
     reducedMotionQuery.addEventListener("change", handleMotionPreference);
     finePointerQuery.addEventListener("change", handleMotionPreference);
@@ -298,6 +333,7 @@ export function HeroKineticGrid() {
       resizeObserver.disconnect();
       intersectionObserver.disconnect();
       hero.removeEventListener("pointermove", handlePointerMove);
+      hero.removeEventListener("pointerdown", handlePointerDown);
       hero.removeEventListener("pointerleave", handlePointerLeave);
       reducedMotionQuery.removeEventListener("change", handleMotionPreference);
       finePointerQuery.removeEventListener("change", handleMotionPreference);

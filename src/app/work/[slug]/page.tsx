@@ -3,10 +3,10 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ProjectParallaxGallery } from "@/app/components/ProjectParallaxGallery";
 import { ProjectLoopVideo } from "@/app/components/ProjectLoopVideo";
-import { getProject, getProjectCategories, projects } from "@/data/projects";
+import { getProject, getProjectCategories, visibleProjects } from "@/data/projects";
 
 export function generateStaticParams() {
-  return projects.map((project) => ({ slug: project.id }));
+  return visibleProjects.map((project) => ({ slug: project.id }));
 }
 
 export async function generateMetadata({
@@ -17,7 +17,7 @@ export async function generateMetadata({
   const { slug } = await params;
   const project = getProject(slug);
 
-  if (!project) return {};
+  if (!project || project.hidden) return {};
 
   return {
     title: `${project.title} — Lucas Souza`,
@@ -33,10 +33,10 @@ export default async function ProjectPage({
   const { slug } = await params;
   const project = getProject(slug);
 
-  if (!project) notFound();
+  if (!project || project.hidden) notFound();
 
-  const currentIndex = projects.findIndex((item) => item.id === project.id);
-  const nextProject = projects[(currentIndex + 1) % projects.length];
+  const currentIndex = visibleProjects.findIndex((item) => item.id === project.id);
+  const nextProject = visibleProjects[(currentIndex + 1) % visibleProjects.length];
 
   return (
     <main className="inner-page project-page">
@@ -74,7 +74,7 @@ export default async function ProjectPage({
           <div className="project-video-frame">
             <iframe
               src={`https://player.vimeo.com/video/${project.vimeoId}?title=0&byline=0&portrait=0&dnt=1`}
-              title={`${project.title} video`}
+              title={`${project.title} product video by Lucas Souza, motion designer and art director`}
               allow="fullscreen; picture-in-picture"
               loading="lazy"
               allowFullScreen
@@ -82,11 +82,14 @@ export default async function ProjectPage({
           </div>
         ) : project.coverVideo ? (
           <div className="project-video-frame">
-            <ProjectLoopVideo video={project.coverVideo} className="project-page-cover-video" />
+            <ProjectLoopVideo
+              video={project.coverVideo}
+              className="project-page-cover-video"
+              label={`${project.title} project video by Lucas Souza, motion designer and art director`}
+            />
           </div>
         ) : (
           <div className="project-visual project-visual-large" data-visual={project.visual}>
-            <span className="project-index">LS / {String(currentIndex + 1).padStart(2, "0")}</span>
             <div className="visual-object" aria-hidden="true" />
             <span className="project-view">Case study / selected frame</span>
           </div>
@@ -108,7 +111,12 @@ export default async function ProjectPage({
         >
           <span className="notes-label">{video.label ?? "Project film"}</span>
           <div className="project-video-frame project-detail-video-frame">
-            <video controls playsInline preload="metadata">
+            <video
+              controls
+              playsInline
+              preload="metadata"
+              aria-label={`${video.title} by Lucas Souza, 2D motion designer`}
+            >
               <source src={video.src} type="video/mp4" />
             </video>
           </div>

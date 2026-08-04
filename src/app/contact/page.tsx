@@ -25,12 +25,12 @@ export default function ContactPage() {
           <a href="mailto:lucassouzajr@gmail.com">
             <span>Email</span>
             <strong>lucassouzajr@gmail.com</strong>
-            <i aria-hidden="true">↗</i>
+            <i aria-hidden="true">→</i>
           </a>
           <a href="https://wa.me/5548999009117" target="_blank" rel="noreferrer">
             <span>WhatsApp</span>
             <strong>+55 48 99900-9117</strong>
-            <i aria-hidden="true">↗</i>
+            <i aria-hidden="true">→</i>
           </a>
         </div>
       </section>

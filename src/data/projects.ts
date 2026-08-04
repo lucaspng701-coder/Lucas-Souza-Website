@@ -2,7 +2,7 @@ export type ProjectCategory = "3D Motion" | "2D Motion" | "Interactive";
 export type ProjectFilter = "All" | ProjectCategory;
 
 export type ProjectCoverVideo = {
-  webm: string;
+  webm?: string;
   mp4: string;
 };
 
@@ -49,10 +49,12 @@ export type Project = {
   services: string[];
   software: string[];
   vimeoId?: string;
+  coverVimeoId?: string;
   coverVideo?: ProjectCoverVideo;
   coverImage?: ProjectCoverImage;
   detailVideos?: ProjectDetailVideo[];
   gallery?: ProjectGalleryRow[];
+  hidden?: boolean;
 };
 
 export const filters: ProjectFilter[] = [
@@ -226,7 +228,59 @@ export const projects: Project[] = [
     description: "A visual exploration of lightness expressed through material, movement and space. The piece combines refined 3D imagery with a playful sense of motion to give the brand idea a physical presence.",
     services: ["3D motion", "Art direction", "Brand animation"],
     software: ["Cinema 4D", "After Effects", "Redshift"],
-    vimeoId: "1093848809",
+    vimeoId: "1026277698",
+    coverImage: {
+      src: "/media/projects/lightness-infinitepay/images/cover.webp",
+      alt: "Lightness campaign artwork for InfinitePay by Lucas Souza",
+    },
+    gallery: [
+      {
+        type: "pair",
+        images: [
+          {
+            src: "/media/projects/lightness-infinitepay/images/imgi-167-886b65192163515-6723d28debf50.webp",
+            alt: "InfinitePay Lightness campaign composition with floating 3D forms",
+            aspect: "square",
+          },
+          {
+            src: "/media/projects/lightness-infinitepay/images/imgi-399-4ff636192163515-6724260492068.webp",
+            alt: "InfinitePay Lightness 3D campaign frame",
+            aspect: "square",
+          },
+        ],
+      },
+      {
+        type: "single",
+        image: {
+          src: "/media/projects/lightness-infinitepay/images/imgi-51-954588192163515-672a134fea2fe.webp",
+          alt: "Wide InfinitePay Lightness brand animation frame",
+          aspect: "wide",
+        },
+      },
+      {
+        type: "pair",
+        images: [
+          {
+            src: "/media/projects/lightness-infinitepay/images/imgi-403-11d716192163515-672a134e70fbe.webp",
+            alt: "InfinitePay Lightness material study in 3D",
+            aspect: "square",
+          },
+          {
+            src: "/media/projects/lightness-infinitepay/images/imgi-46-4ff636192163515-6724260492068.webp",
+            alt: "InfinitePay Lightness campaign still with sculptural forms",
+            aspect: "square",
+          },
+        ],
+      },
+      {
+        type: "single",
+        image: {
+          src: "/media/projects/lightness-infinitepay/images/imgi-52-439306192163515-672a134fe9a02.webp",
+          alt: "Wide 3D scene from the InfinitePay Lightness campaign",
+          aspect: "wide",
+        },
+      },
+    ],
   },
   {
     id: "teachable-payments",
@@ -239,6 +293,9 @@ export const projects: Project[] = [
     description: "A product film created to introduce a payments experience through clear, friendly motion. Interface details, typography and graphic transitions work together to make the product easy to understand at a glance.",
     services: ["2D motion", "Product animation", "Motion design"],
     software: ["Figma", "Illustrator", "After Effects"],
+    coverVideo: {
+      mp4: "/videos/covers/teachable-payments.mp4",
+    },
   },
   {
     id: "ai-avengers",
@@ -251,18 +308,24 @@ export const projects: Project[] = [
     description: "A campaign animation built around a bold cast of ideas and an energetic graphic language. Expressive typography and fast-paced transitions give the story momentum while keeping the message playful and accessible.",
     services: ["2D motion", "Campaign animation", "Motion design"],
     software: ["Illustrator", "After Effects"],
+    coverVideo: {
+      mp4: "/videos/covers/ai-avengers.mp4",
+    },
   },
   {
-    id: "b2b-bulk-distribution",
-    title: "B2B Bulk Distribution — Teachable",
+    id: "customer-journey-program-teachable",
+    title: "Customer Journey Program - Teachable",
     category: "2D Motion",
     client: ["Teachable"],
     discipline: "2D Motion · Product",
     visual: "signal",
-    summary: "A 2D product communication piece created for Teachable.",
-    description: "A product story designed to explain a complex B2B workflow with clarity and pace. Structured compositions and purposeful transitions turn a multi-step process into a simple, cohesive narrative.",
+    summary: "A product communication film for Teachable's Customer Journey Program.",
+    description: "A clear, approachable motion story created to guide customers through the Teachable journey. Structured interface moments, typography and graphic transitions connect each stage while keeping the product experience easy to follow.",
     services: ["2D motion", "Product animation", "Visual storytelling"],
     software: ["Figma", "Illustrator", "After Effects"],
+    coverVideo: {
+      mp4: "/videos/covers/customer-journey-program-teachable.mp4",
+    },
   },
   {
     id: "teachable",
@@ -275,30 +338,7 @@ export const projects: Project[] = [
     description: "A brand motion exploration developed to bring consistency and personality across a wide range of communication moments. The system balances expressive movement with flexible rules that can scale across formats.",
     services: ["2D motion", "Brand animation", "Motion system"],
     software: ["Illustrator", "After Effects"],
-  },
-  {
-    id: "enterprise-teachable",
-    title: "Enterprise — Teachable",
-    category: "Interactive",
-    client: ["Teachable"],
-    discipline: "Interactive · Product",
-    visual: "interface",
-    summary: "An interactive product experience created for Teachable Enterprise.",
-    description: "An interactive product experience shaped to communicate scale, flexibility and confidence. Motion supports the information architecture and creates continuity as users move through the enterprise story.",
-    services: ["Interaction design", "UX/UI motion", "Creative development"],
-    software: ["Figma", "After Effects"],
-  },
-  {
-    id: "threejs-game-vibejam",
-    title: "Three.js Game Vibejam",
-    category: "Interactive",
-    client: ["Independent"],
-    discipline: "Interactive · Creative Development",
-    visual: "kinetic",
-    summary: "An interactive Three.js game experiment created for Vibejam.",
-    description: "A browser-based game experiment combining real-time 3D, playful interaction and rapid prototyping. The project explores how a compact set of mechanics can create an immediate and visually engaging experience.",
-    services: ["Creative development", "Three.js", "Interaction design"],
-    software: ["Blender", "Three.js", "JavaScript"],
+    hidden: true,
   },
   {
     id: "ui-motion-atomsix",
@@ -312,8 +352,11 @@ export const projects: Project[] = [
     services: ["UI motion", "2D animation", "Motion design"],
     software: ["Figma", "After Effects"],
     vimeoId: "1094261707",
+    coverVimeoId: "1094261707",
   },
 ];
+
+export const visibleProjects = projects.filter((project) => !project.hidden);
 
 export function getProject(id: string) {
   return projects.find((project) => project.id === id);

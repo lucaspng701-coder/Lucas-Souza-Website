@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { PageTitleReveal } from "../components/PageTitleReveal";
 import { ProjectCard } from "../components/ProjectCard";
 import { FooterSocialLinks } from "../components/FooterSocialLinks";
-import { projects } from "@/data/projects";
+import { visibleProjects } from "@/data/projects";
 
 export const metadata: Metadata = {
   title: "Work — Lucas Souza",
@@ -14,7 +14,7 @@ export default function WorkPage() {
     <main className="inner-page work-index grid-surface">
       <section className="page-hero section-pad">
         <div className="page-eyebrow">
-          <span>Index / 01—{String(projects.length).padStart(2, "0")}</span>
+          <span>Selected archive</span>
           <span>Motion · Design · Interaction</span>
         </div>
         <PageTitleReveal firstLine="Selected" secondLine="Works." />
@@ -23,8 +23,8 @@ export default function WorkPage() {
 
       <section className="work-index-grid section-pad" aria-label="All projects">
         <div className="projects-grid projects-grid-index">
-          {projects.map((project, index) => (
-            <ProjectCard project={project} index={index} key={project.id} />
+          {visibleProjects.map((project) => (
+            <ProjectCard project={project} key={project.id} />
           ))}
         </div>
       </section>
