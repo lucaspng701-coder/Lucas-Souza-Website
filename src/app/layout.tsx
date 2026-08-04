@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Analytics } from "@vercel/analytics/next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { SiteHeader } from "./components/SiteHeader";
 import { SmoothScroll } from "./components/SmoothScroll";
@@ -57,6 +58,7 @@ export default function RootLayout({
         <SiteHeader />
         <SmoothScroll>{children}</SmoothScroll>
         <SocialDock />
+        <Analytics />
       </body>
     </html>
   );
